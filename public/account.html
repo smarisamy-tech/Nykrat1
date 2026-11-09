@@ -24,12 +24,35 @@
   <button id="logout">Sign out</button>
 </div>
 <script>
+  function renderUserInfo(user) {
+    const infoEl = document.getElementById('info');
+    infoEl.innerHTML = '';
+
+    const rows = [
+      ['Email', user.email],
+      ['Member since', user.created_at],
+      ['Last login', user.last_login_at ?? '—'],
+    ];
+
+    for (const [label, value] of rows) {
+      const row = document.createElement('div');
+      row.className = 'row';
+
+      const key = document.createElement('span');
+      key.textContent = label;
+
+      const val = document.createElement('span');
+      val.textContent = value ?? '—';
+
+      row.appendChild(key);
+      row.appendChild(val);
+      infoEl.appendChild(row);
+    }
+  }
+
   fetch('/api/me').then(r => r.ok ? r.json() : Promise.reject())
     .then(({ user }) => {
-      document.getElementById('info').innerHTML = `
-        <div class="row"><span>Email</span><span>${user.email}</span></div>
-        <div class="row"><span>Member since</span><span>${user.created_at}</span></div>
-        <div class="row"><span>Last login</span><span>${user.last_login_at ?? '—'}</span></div>`;
+      renderUserInfo(user);
     })
     .catch(() => { window.location.href = '/index.html'; });
 
