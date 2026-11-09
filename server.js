@@ -46,6 +46,11 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// The login page is stored at the repository root, so serve it at the deployed URL.
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 app.use(
   session({
     secret: SESSION_SECRET,
